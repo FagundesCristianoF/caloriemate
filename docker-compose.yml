@@ -22,13 +22,16 @@ services:
       dockerfile: Dockerfile
     container_name: caloriemate-app
     ports:
-      - "${PORT:-8080}:8080"
+      - "8088:8080"
     environment:
       - STAGE=prod
       - CLIP_HOST=http://clip:8001
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - OPENROUTER_VISION_MODEL=${OPENROUTER_VISION_MODEL:-google/gemini-2.5-flash}
-    volumes:
+      - OLLAMA_HOST=http://ollama:11434
+      - AI_PROVIDER=ollama
+      - OLLAMA_VISION_MODEL=caloriemate-vision-json 
+   volumes:
       - pb_data:/pb/pb_data
     depends_on:
       clip:
