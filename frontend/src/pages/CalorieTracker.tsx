@@ -112,20 +112,24 @@ export default function CalorieTracker() {
   // Load meal history from PocketBase
   const loadMealHistory = useCallback(async () => {
     try {
-      const records = await pb.collection("meal_history").getList(1, 20, {
-        sort: "-created",
-        expand: "meal",
-        autoCancel: false,
-        filter: pb.filter(
-          "adjustments != {:adjustment} && created > {:today}",
-          {
-            today: new Date(new Date().setHours(0, 0, 0, 0))
-              .toISOString()
-              .replace("T", " "),
-            adjustment: "hidden",
-          },
-        ),
-      });
+      const records = await pb.collection("meal_history").getList(
+        1,
+        20,
+        {
+          sort: "-created",
+          expand: "meal",
+          filter: pb.filter(
+            "adjustments != {:adjustment} && created > {:today}",
+            {
+              today: new Date(new Date().setHours(0, 0, 0, 0))
+                .toISOString()
+                .replace("T", " "),
+              adjustment: "hidden",
+            },
+          ),
+        },
+        { autoCancel: false },
+      );
 
       const meals: MealEntry[] = records.items.map((record) => {
         const recordData = record as Record<string, unknown>;

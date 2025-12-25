@@ -115,13 +115,17 @@ export default function WeeklyHistoryPage({ onBack, userGoals }: WeeklyHistoryPa
       weekEnd.setDate(currentWeekStart.getDate() + 7);
       
       // Load all meals for the week
-      const records = await pb.collection("meal_history").getList(1, 200, {
-        sort: "-created",
-        created: `>=${currentWeekStart.toISOString().replace("T", " ")} && <${weekEnd.toISOString().replace("T", " ")}`,
-        expand: "meal",
-        filter: `adjustments != 'hidden'`,
-        autoCancel: false,
-      });
+      const records = await pb.collection("meal_history").getList(
+        1,
+        200,
+        {
+          sort: "-created",
+          created: `>=${currentWeekStart.toISOString().replace("T", " ")} && <${weekEnd.toISOString().replace("T", " ")}`,
+          expand: "meal",
+          filter: `adjustments != 'hidden'`,
+        },
+        { autoCancel: false },
+      );
 
       const weeklyData: DayData[] = weekDays.map(date => {
         const dayStart = new Date(date);
