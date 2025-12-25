@@ -68,6 +68,7 @@ export default function CalorieTracker() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const hasLoadedMealsRef = useRef(false);
   const hasLoadedProfileRef = useRef(false);
+  const isLoadingMealsRef = useRef(false);
   const { user } = useAuth();
 
   // Load user profile from database
@@ -111,6 +112,8 @@ export default function CalorieTracker() {
 
   // Load meal history from PocketBase
   const loadMealHistory = useCallback(async () => {
+    if (isLoadingMealsRef.current) return;
+    isLoadingMealsRef.current = true;
     try {
       const records = await pb.collection("meal_history").getList(
         1,
@@ -261,6 +264,8 @@ export default function CalorieTracker() {
       setTodayProtein(totalProtein);
     } catch (error) {
       console.error("Failed to load meal history:", error);
+    } finally {
+      isLoadingMealsRef.current = false;
     }
   }, []);
 
