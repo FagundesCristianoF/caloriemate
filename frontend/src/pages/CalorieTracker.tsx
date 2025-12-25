@@ -127,8 +127,8 @@ export default function CalorieTracker() {
               adjustment: "hidden",
             },
           ),
+          autoCancel: false,
         },
-        { autoCancel: false },
       );
 
       const meals: MealEntry[] = records.items.map((record) => {

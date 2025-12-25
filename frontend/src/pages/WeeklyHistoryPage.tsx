@@ -123,8 +123,8 @@ export default function WeeklyHistoryPage({ onBack, userGoals }: WeeklyHistoryPa
           created: `>=${currentWeekStart.toISOString().replace("T", " ")} && <${weekEnd.toISOString().replace("T", " ")}`,
           expand: "meal",
           filter: `adjustments != 'hidden'`,
+          autoCancel: false,
         },
-        { autoCancel: false },
       );
 
       const weeklyData: DayData[] = weekDays.map(date => {
