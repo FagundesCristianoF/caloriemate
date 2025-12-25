@@ -130,7 +130,7 @@ export default function CalorieTracker() {
               adjustment: "hidden",
             },
           ),
-          autoCancel: false,
+          requestKey: null,
         },
       );
 
