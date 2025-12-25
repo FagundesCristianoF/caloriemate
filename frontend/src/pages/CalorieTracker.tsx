@@ -115,10 +115,13 @@ export default function CalorieTracker() {
       const records = await pb.collection("meal_history").getList(1, 20, {
         sort: "-created",
         expand: "meal",
+        autoCancel: false,
         filter: pb.filter(
           "adjustments != {:adjustment} && created > {:today}",
           {
-            today: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
+            today: new Date(new Date().setHours(0, 0, 0, 0))
+              .toISOString()
+              .replace("T", " "),
             adjustment: "hidden",
           },
         ),
@@ -130,6 +133,9 @@ export default function CalorieTracker() {
         const mealTemplate = expandData?.meal as Record<string, unknown>;
         const portionMultiplier =
           (recordData.portion_multiplier as number) || 1.0;
+
+        const createdAt = record.created.replace(" ", "T");
+        const updatedAt = record.updated.replace(" ", "T");
 
         return {
           id: record.id,
@@ -173,8 +179,8 @@ export default function CalorieTracker() {
             : undefined,
           processingStatus: ((mealTemplate?.processing_status as string) ||
             "pending") as MealTemplatesProcessingStatusOptions,
-          created: record.created,
-          updated: record.updated,
+          created: createdAt,
+          updated: updatedAt,
           linkedMealTemplateId:
             (mealTemplate?.linked_meal_template_id as string) || undefined,
           isPrimaryInGroup:

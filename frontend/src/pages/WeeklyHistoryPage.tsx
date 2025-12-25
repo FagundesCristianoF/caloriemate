@@ -117,9 +117,10 @@ export default function WeeklyHistoryPage({ onBack, userGoals }: WeeklyHistoryPa
       // Load all meals for the week
       const records = await pb.collection("meal_history").getList(1, 200, {
         sort: "-created",
-        created: `>=${currentWeekStart.toISOString()} && <${weekEnd.toISOString()}`,
+        created: `>=${currentWeekStart.toISOString().replace("T", " ")} && <${weekEnd.toISOString().replace("T", " ")}`,
         expand: "meal",
         filter: `adjustments != 'hidden'`,
+        autoCancel: false,
       });
 
       const weeklyData: DayData[] = weekDays.map(date => {
@@ -130,7 +131,7 @@ export default function WeeklyHistoryPage({ onBack, userGoals }: WeeklyHistoryPa
 
         // Filter meals for this specific day
         const dayMeals = records.items.filter(record => {
-          const mealDate = new Date(record.created);
+          const mealDate = new Date(record.created.replace(" ", "T"));
           return mealDate >= dayStart && mealDate <= dayEnd;
         });
 
